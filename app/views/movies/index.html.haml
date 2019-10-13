@@ -4,7 +4,7 @@
   Include:
   - @all_ratings.each do |rating|
     = rating
-    = check_box_tag "ratings[#{rating}]", "1", checked(rating), id: "ratings_#{rating}"
+    = check_box_tag "ratings[#{rating}]", "1", (session[:ratings].nil?) || (session[:ratings].include? rating), id: "ratings_#{rating}"
   = submit_tag 'Refresh', :class => 'btn btn-primary', :id => "ratings_submit"
 
 %table#movies.table.table-striped.col-md-12
@@ -14,7 +14,7 @@
         %a#title_header{:href => movies_path({:order => 'title'})} Movie Title
       %th Rating
       %th{:class => hilite('release_date')}
-        %a#release_date_header{:href => "#{movies_path}?order=release_date"} Release Date
+        %a#release_date_header{:href => movies_path({:order => 'release_date'})} Release Date
       %th More Info
   %tbody
     - @movies.each do |movie|
