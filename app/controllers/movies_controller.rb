@@ -39,7 +39,7 @@ helper_method :checked
     elsif params[:ratings].nil? && !params[:order].nil?
       @movies = Movie.all.order(session[:order])
     
-    elsif !session[:order].nil? && !session[:ratings].nil?
+    elsif !session[:order].nil? || !session[:ratings].nil?
       redirect_to movies_path("ratings" => session[:ratings], "order" => session[:order])
 
     else
