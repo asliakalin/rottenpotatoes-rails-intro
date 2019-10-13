@@ -30,13 +30,10 @@ helper_method :checked
       redirect_to movies_path("ratings" => session[:ratings], "order" => session[:order])
 
 
-    elsif !params[:ratings].nil? && !params[:order].nil?
+    elsif (!params[:ratings].nil? || !params[:order].nil?) && !params[:ratings].nil?
       checked = params[:ratings].keys
       @movies = Movie.where(rating: checked).order(params[:order])
-    elsif !params[:ratings].nil? && params[:order].nil?
-      checked = params[:ratings].keys
-      @movies = Movie.where(rating: checked).order(session[:order])
-    elsif params[:ratings].nil? && !params[:order].nil?
+    elsif (!params[:ratings].nil? || !params[:order].nil?)
       @movies = Movie.all.order(session[:order])
     
     elsif !session[:order].nil? || !session[:ratings].nil?
