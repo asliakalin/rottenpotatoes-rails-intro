@@ -1,6 +1,6 @@
 class MoviesController < ApplicationController
   helper_method :hilite
-
+helper_method :checked
 
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date)
@@ -12,15 +12,36 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
 
+  def checked(rating)
+    if (session[:ratings].nil?) || (session[:ratings].include? rating)
+      return true
+    end
+    return false 
+  end
+
   def index
     @all_ratings = Movie.get_ratings
-    if !params[:order].nil?
-      @movies = Movie.all.order(params[:order])
-      return @movies
+    session[:ratings] = params[:ratings]
+    session[:order] = params[:order]
+
+    if params[:order].nil? && !session[:order].nil?
+      redirect_to movies_path("ratings" => session[:ratings], "order" => session[:order])
+    elsif (params[:ratings].nil? && !session[:ratings].nil?)
+      redirect_to movies_path("ratings" => session[:ratings], "order" => session[:order])
+    elsif !params[:ratings].nil? && !params[:order].nil?
+      checked = params[:ratings].keys
+      @movies = Movie.where(rating: checked).order(session[:order])
+    elsif !params[:ratings].nil? && params[:order].nil?
+      checked = params[:ratings].keys
+      @movies = Movie.where(rating: checked).order(session[:order])
+    elsif params[:ratings].nil? && !params[:order].nil?
+      @movies = Movie.all.order(session[:order])
+    elsif !session[:order].nil? && !session[:ratings].nil?
+      redirect_to movies_path("ratings" => session[:ratings], "order" => session[:order])
     else
       @movies=Movie.all
-      return @movies
     end
+    return @movies
   end
 
   def new
@@ -58,7 +79,6 @@ class MoviesController < ApplicationController
       return nil
     end
   end
-
 
 
 end
