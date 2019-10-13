@@ -32,7 +32,7 @@ helper_method :checked
 
     elsif (!params[:ratings].nil? || !params[:order].nil?) && !params[:ratings].nil?
       checked = params[:ratings].keys
-      @movies = Movie.where(rating: checked).order(params[:order])
+      @movies = Movie.where(rating: checked).order(session[:order])
     elsif (!params[:ratings].nil? || !params[:order].nil?)
       @movies = Movie.all.order(session[:order])
     
@@ -74,7 +74,7 @@ helper_method :checked
   end
 
   def hilite(section)
-    if (params[:order].to_s == section)
+    if (session[:order].to_s == section)
       return "p-3 mb-2 bg-warning text-dark hilite"
     else
       return nil
