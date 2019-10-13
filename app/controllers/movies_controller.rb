@@ -13,6 +13,7 @@ class MoviesController < ApplicationController
   end
 
   def index
+    @all_ratings = Movie.get_ratings
     if !params[:order].nil?
       @movies = Movie.all.order(params[:order])
       return @movies
