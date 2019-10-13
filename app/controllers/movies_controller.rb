@@ -21,8 +21,12 @@ helper_method :checked
 
   def index
     @all_ratings = Movie.get_ratings
-    session[:ratings] = params[:ratings]
-    session[:order] = params[:order]
+    if !params[:ratings].nil?
+      session[:ratings] = params[:ratings]
+    end
+    if !params[:order].nil?
+      session[:order] = params[:order] 
+    end 
 
     if params[:order].nil? && !session[:order].nil?
       redirect_to movies_path("ratings" => session[:ratings], "order" => session[:order])
